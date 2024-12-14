@@ -92,11 +92,12 @@ resource "aws_config_configuration_recorder" "config_recorder" {
 
   recording_group {
     all_supported = true
-   #  resource_types = [
-   #    "AWS::S3::Bucket",
-   #    "AWS::EC2::Instance",
-   #    "AWS::Lambda::Function"
-   #  ]
+    resource_types = [
+      "AWS::S3::Bucket",
+      "AWS::EC2::Instance",
+      "AWS::Lambda::Function",
+      "AWS::EFS::AccessPoint"
+    ]
   }
 
   
