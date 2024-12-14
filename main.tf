@@ -59,7 +59,7 @@ resource "aws_config_configuration_recorder" "config_recorder" {
 # Delivery Channel
 resource "aws_config_delivery_channel" "config_delivery_channel" {
   name           = "config-delivery-channel"
-  s3_bucket_name = aws_s3_bucket.config_bucket.name
+  s3_bucket_name = aws_s3_bucket.config_bucket.bucket
   depends_on     = [aws_config_configuration_recorder.config_recorder]
 }
 
