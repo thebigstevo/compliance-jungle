@@ -95,6 +95,7 @@ resource "aws_config_configuration_recorder" "config_recorder" {
     resource_types = [
       "AWS::S3::Bucket",
       "AWS::EC2::Instance",
+      "AWS::lambda::function"
     ]
   }
 
@@ -137,6 +138,17 @@ resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
   source {
     owner             = "AWS"
     source_identifier = "EC2_NO_AMAZON_KEY_PAIR"
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for EC2 no lambda DLQ check
+resource "aws_config_config_rule" "lambda-dlq-check" {
+  name = "lambda-dlq-check"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "LAMBDA_DLQ_CHECK"
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
