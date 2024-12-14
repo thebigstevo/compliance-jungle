@@ -70,14 +70,16 @@ resource "aws_config_config_rule" "s3_bucket_encryption" {
     owner             = "AWS"
     source_identifier = "S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED"
   }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
-# # Config Rule for S3 Bucket Encryption
-# resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
-#   name = "ec2-no-amazon-key-pair"
+# Config Rule for S3 Bucket Encryption
+resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
+  name = "ec2-no-amazon-key-pair"
 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "EC2_NO_AMAZON_KEY_PAIR"
-#   }
-# }
+  source {
+    owner             = "AWS"
+    source_identifier = "EC2_NO_AMAZON_KEY_PAIR"
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
