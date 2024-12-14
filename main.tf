@@ -1,6 +1,6 @@
 # AWS S3 bucket for Config delivery
 resource "aws_s3_bucket" "config_bucket" {
-  bucket = "aws-config-monitoring-bucket"
+  bucket = "compliance-jungle-config-monitoring-bucket"
 }
 
 # IAM role for AWS Config
