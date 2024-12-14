@@ -152,3 +152,16 @@ resource "aws_config_config_rule" "lambda-dlq-check" {
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
+
+
+
+# Config Rule for efs_access_point_enforce_root_directory
+resource "aws_config_config_rule" "efs-access-point-enforce-root-directory" {
+  name = "efs_access_point_enforce_root_directory"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "EFS_ACCESS_POINT_ENFORCE_ROOT_DIRECTORY"
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
