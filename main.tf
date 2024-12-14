@@ -24,7 +24,7 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
           Service = "config.amazonaws.com"
         }
         Action   = "s3:GetBucketAcl"
-        Resource = "${aws_s3_bucket.config_bucket.arn}/*"
+        Resource = aws_s3_bucket.config_bucket.arn
       },
       {
         Sid    = "AWSConfigBucketDelivery"
@@ -33,7 +33,7 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
           Service = "config.amazonaws.com"
         }
         Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.config_bucket.arn}/*"
+        Resource = aws_s3_bucket.config_bucket.arn
         Condition = {
           StringEquals = {
             "s3:x-amz-acl" = "bucket-owner-full-control"
