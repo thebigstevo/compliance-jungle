@@ -45,24 +45,6 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
 }
 
 
-# IAM role for AWS Config
-resource "aws_iam_role" "config_role" {
-  name = "AWSConfigRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "config.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
 resource "aws_iam_role_policy" "config_policy" {
   role = aws_iam_role.config_role.id
 
@@ -70,15 +52,42 @@ resource "aws_iam_role_policy" "config_policy" {
     Version = "2012-10-17",
     Statement = [
       {
+        # Permissions for S3 buckets and delivery
         Effect   = "Allow",
         Action   = [
-          "s3:*",
-          "sns:*",
-          "config:*",
           "s3:GetBucketAcl",
           "s3:PutObject",
           "s3:PutObjectAcl"
-        ]
+        ],
+        Resource = "*"
+      },
+      {
+        # Permissions for recording and describing resources
+        Effect   = "Allow",
+        Action   = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeSecurityGroups",
+          "elasticfilesystem:DescribeAccessPoints",
+          "elasticfilesystem:DescribeFileSystems",
+          "lambda:GetFunctionConfiguration",
+          "s3:ListAllMyBuckets",
+          "s3:GetBucketLocation",
+          "iam:GetAccountAuthorizationDetails",
+          "iam:GetAccountPasswordPolicy",
+          "iam:GetAccountSummary",
+          "config:Put*",
+          "config:Get*",
+          "config:List*",
+          "config:Describe*"
+        ],
+        Resource = "*"
+      },
+      {
+        # Permissions for AWS Config to publish to SNS if applicable
+        Effect   = "Allow",
+        Action   = [
+          "sns:Publish"
+        ],
         Resource = "*"
       }
     ]
