@@ -95,7 +95,7 @@ resource "aws_config_configuration_recorder" "config_recorder" {
     resource_types = [
       "AWS::S3::Bucket",
       "AWS::EC2::Instance",
-      "AWS::lambda::function"
+      "AWS::Lambda::Function"
     ]
   }
 
