@@ -97,7 +97,7 @@ resource "aws_config_configuration_recorder" "config_recorder" {
 
   recording_group {
     all_supported              = true
-    include_global_resource_types = true
+   #  include_global_resource_types = true
   }
 }
 
