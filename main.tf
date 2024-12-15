@@ -62,24 +62,6 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
 }
 
 
-# IAM Role for AWS Config
-resource "aws_iam_role" "config_role" {
-  name = "AWSConfigRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = {
-          Service = "config.amazonaws.com"
-        },
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}
-
 # IAM Role Policy for AWS Config
 resource "aws_iam_role_policy" "config_policy" {
   role = aws_iam_role.config_role.id
