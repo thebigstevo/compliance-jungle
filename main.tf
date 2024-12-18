@@ -77,8 +77,10 @@ resource "aws_iam_role_policy" "config_policy" {
           "s3:ListAllMyBuckets",
           "s3:GetBucketLocation",
           "ec2:DescribeInstances",
-          "lambda:GetFunctionConfiguration",
-          "elasticfilesystem:DescribeFileSystems",
+          "lambda:GetFunctionConfiguration",    # Added for Lambda DLQ Check
+          "sqs:GetQueueAttributes",             # Added for DLQ checks if SQS is used as DLQ
+          "sqs:ListQueues",                     # Added for identifying queues
+          "elasticfilesystem:DescribeFileSystems", # Added for EFS Access Point Enforce Root Directory
           "config:Put*",
           "config:Get*",
           "config:Describe*",
