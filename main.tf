@@ -130,6 +130,10 @@ resource "aws_config_config_rule" "s3_bucket_encryption" {
     owner             = "AWS"
     source_identifier = "S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED"
   }
+
+  scope {
+    compliance_resource_types = ["AWS::S3::Bucket"]
+  }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
@@ -141,6 +145,10 @@ resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
     owner             = "AWS"
     source_identifier = "EC2_NO_AMAZON_KEY_PAIR"
   }
+
+  scope {
+    compliance_resource_types = [ "AWS::EC2::Instance" ]
+  }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
@@ -151,6 +159,9 @@ resource "aws_config_config_rule" "lambda-dlq-check" {
   source {
     owner             = "AWS"
     source_identifier = "LAMBDA_DLQ_CHECK"
+  }
+  scope {
+    compliance_resource_types = [ "AWS::Lambda::Function" ]
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -164,6 +175,9 @@ resource "aws_config_config_rule" "efs-access-point-enforce-root-directory" {
   source {
     owner             = "AWS"
     source_identifier = "EFS_ACCESS_POINT_ENFORCE_ROOT_DIRECTORY"
+  }
+  scope {
+    compliance_resource_types = [ "AWS::EFS::AccessPoint" ]
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
