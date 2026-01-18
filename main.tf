@@ -77,21 +77,22 @@ resource "aws_iam_role_policy" "config_policy" {
           "s3:ListAllMyBuckets",
           "s3:GetBucketLocation",
           "ec2:DescribeInstances",
-          "lambda:GetFunctionConfiguration",    # Added for Lambda DLQ Check
-          "sqs:GetQueueAttributes",             # Added for DLQ checks if SQS is used as DLQ
-          "sqs:ListQueues",                     # Added for identifying queues
-          "elasticfilesystem:DescribeFileSystems", # Added for EFS Access Point Enforce Root Directory
-          "apigateway:GET",                       # Added for API Gateway checks
-          "ecs:DescribeClusters",                 # Added for ECS checks
-          "ecs:DescribeServices",                 # Added for ECS checks
-          "ecs:DescribeTaskDefinition",           # Added for ECS checks
-          "ec2:DescribeVolumes",                  # Added for EBS checks
-          "ec2:DescribeSecurityGroups",           # Added for security group checks
-          "cloudwatch:DescribeAlarms",            # Added for CloudWatch alarm checks
-          "logs:DescribeLogGroups",               # Added for CloudWatch Logs checks
+          "lambda:GetFunctionConfiguration",
+          "sqs:GetQueueAttributes",
+          "sqs:ListQueues",
+          "elasticfilesystem:DescribeFileSystems",
+          "apigateway:GET",
+          "ecs:DescribeClusters",
+          "ecs:DescribeServices",
+          "ecs:DescribeTaskDefinition",
+          "ec2:DescribeVolumes",
+          "ec2:DescribeSecurityGroups",
+          "cloudwatch:DescribeAlarms",
+          "logs:DescribeLogGroups",
           "config:Put*",
           "config:Get*",
           "config:Describe*",
+          "config:ListDiscoveredResources",
           "sns:Publish"
         ],
         Resource = "*"
