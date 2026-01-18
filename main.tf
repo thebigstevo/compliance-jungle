@@ -62,7 +62,13 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
 }
 
 
-# IAM Role Policy for AWS Config
+# IAM Role Policy Attachment for AWS Config - Use AWS managed policy
+resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
+  role       = aws_iam_role.config_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/ConfigRole"
+}
+
+# Custom IAM Role Policy for additional permissions
 resource "aws_iam_role_policy" "config_policy" {
   role = aws_iam_role.config_role.id
 
@@ -74,27 +80,12 @@ resource "aws_iam_role_policy" "config_policy" {
         Action   = [
           "s3:GetBucketAcl",
           "s3:PutObject",
-          "s3:ListAllMyBuckets",
-          "s3:GetBucketLocation",
-          "ec2:DescribeInstances",
-          "lambda:GetFunctionConfiguration",    # Added for Lambda DLQ Check
-          "sqs:GetQueueAttributes",             # Added for DLQ checks if SQS is used as DLQ
-          "sqs:ListQueues",                     # Added for identifying queues
-          "elasticfilesystem:DescribeFileSystems", # Added for EFS Access Point Enforce Root Directory
-          "apigateway:GET",                       # Added for API Gateway checks
-          "ecs:DescribeClusters",                 # Added for ECS checks
-          "ecs:DescribeServices",                 # Added for ECS checks
-          "ecs:DescribeTaskDefinition",           # Added for ECS checks
-          "ec2:DescribeVolumes",                  # Added for EBS checks
-          "ec2:DescribeSecurityGroups",           # Added for security group checks
-          "cloudwatch:DescribeAlarms",            # Added for CloudWatch alarm checks
-          "logs:DescribeLogGroups",               # Added for CloudWatch Logs checks
-          "config:Put*",
-          "config:Get*",
-          "config:Describe*",
-          "sns:Publish"
+          "s3:GetBucketLocation"
         ],
-        Resource = "*"
+        Resource = [
+          aws_s3_bucket.config_bucket.arn,
+          "${aws_s3_bucket.config_bucket.arn}/*"
+        ]
       }
     ]
   })
