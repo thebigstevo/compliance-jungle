@@ -1,6 +1,6 @@
 # AWS S3 bucket for Config delivery
 resource "aws_s3_bucket" "config_bucket" {
-  bucket = "compliance-jungle-config-monitoring-bucket"
+  bucket = "compliance-config-monitoring-bucket-25"
 }
 
 resource "aws_s3_bucket_versioning" "config_bucket_versioning" {
