@@ -77,23 +77,24 @@ resource "aws_iam_role_policy" "config_policy" {
           "s3:ListAllMyBuckets",
           "s3:GetBucketLocation",
           "ec2:DescribeInstances",
-          "lambda:GetFunctionConfiguration",
-          "sqs:GetQueueAttributes",
-          "sqs:ListQueues",
-          "elasticfilesystem:DescribeFileSystems",
-          "apigateway:GET",
-          "ecs:DescribeClusters",
-          "ecs:DescribeServices",
-          "ecs:DescribeTaskDefinition",
           "ec2:DescribeVolumes",
           "ec2:DescribeSecurityGroups",
+          "ec2:GetEbsEncryptionByDefault",
+          "ec2:DescribeFlowLogs",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeNetworkAcls",
           "cloudwatch:DescribeAlarms",
           "logs:DescribeLogGroups",
+          "iam:GetAccountPasswordPolicy",
+          "iam:ListUsers",
+          "iam:GetUserPolicy",
+          "iam:ListUserPolicies",
+          "iam:ListAttachedUserPolicies",
+          "iam:GetAccountSummary",
           "config:Put*",
           "config:Get*",
           "config:Describe*",
-          "config:ListDiscoveredResources",
-          "sns:Publish"
+          "config:ListDiscoveredResources"
         ],
         Resource = "*"
       }
@@ -441,6 +442,119 @@ resource "aws_config_config_rule" "cloudwatch_log_group_encrypted" {
   }
   scope {
     compliance_resource_types = ["AWS::Logs::LogGroup"]
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# VPC and Network Security Rules
+
+# Config Rule for VPC Flow Logs enabled
+resource "aws_config_config_rule" "vpc_flow_logs_enabled" {
+  name = "vpc-flow-logs-enabled"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "VPC_FLOW_LOGS_ENABLED"
+  }
+  scope {
+    compliance_resource_types = ["AWS::EC2::VPC"]
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for VPC default security group closed
+resource "aws_config_config_rule" "vpc_default_security_group_closed" {
+  name = "vpc-default-security-group-closed"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "VPC_DEFAULT_SECURITY_GROUP_CLOSED"
+  }
+  scope {
+    compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for VPC network ACL unused check
+resource "aws_config_config_rule" "vpc_network_acl_unused_check" {
+  name = "vpc-network-acl-unused-check"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "VPC_NETWORK_ACL_UNUSED_CHECK"
+  }
+  scope {
+    compliance_resource_types = ["AWS::EC2::NetworkAcl"]
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for restricted common ports
+resource "aws_config_config_rule" "restricted_common_ports" {
+  name = "restricted-common-ports"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "RESTRICTED_INCOMING_TRAFFIC"
+  }
+  
+  input_parameters = jsonencode({
+    blockedPort1 = "20"
+    blockedPort2 = "21"
+    blockedPort3 = "3389"
+    blockedPort4 = "3306"
+    blockedPort5 = "5432"
+  })
+
+  scope {
+    compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# IAM Security Rules
+
+# Config Rule for IAM password policy
+resource "aws_config_config_rule" "iam_password_policy" {
+  name = "iam-password-policy"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "IAM_PASSWORD_POLICY"
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for IAM user no policies check
+resource "aws_config_config_rule" "iam_user_no_policies_check" {
+  name = "iam-user-no-policies-check"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "IAM_USER_NO_POLICIES_CHECK"
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for IAM root access key check
+resource "aws_config_config_rule" "iam_root_access_key_check" {
+  name = "iam-root-access-key-check"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "IAM_ROOT_ACCESS_KEY_CHECK"
+  }
+  depends_on = [aws_config_configuration_recorder.config_recorder]
+}
+
+# Config Rule for MFA enabled for IAM console access
+resource "aws_config_config_rule" "mfa_enabled_for_iam_console_access" {
+  name = "mfa-enabled-for-iam-console-access"
+
+  source {
+    owner             = "AWS"
+    source_identifier = "MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS"
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
