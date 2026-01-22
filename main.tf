@@ -72,10 +72,8 @@ resource "aws_iam_role_policy" "config_policy" {
       {
         Effect   = "Allow",
         Action   = [
-          "s3:GetBucketAcl",
-          "s3:PutObject",
-          "s3:ListAllMyBuckets",
-          "s3:GetBucketLocation",
+          "s3:Get*",
+          "s3:List*",
           "ec2:Describe*",
           "ec2:Get*",
           "ssm:DescribeInstanceInformation",
