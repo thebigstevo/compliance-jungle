@@ -122,9 +122,6 @@ resource "aws_config_configuration_recorder" "config_recorder" {
   recording_group {
     all_supported              = true
     include_global_resource_types = false
-    resource_types = [
-      "AWS::S3::Bucket"
-    ]
   }
 }
 
@@ -563,13 +560,13 @@ resource "aws_config_config_rule" "iam_root_access_key_check" {
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
-# Config Rule for MFA enabled for IAM console access
-resource "aws_config_config_rule" "mfa_enabled_for_iam_console_access" {
-  name = "mfa-enabled-for-iam-console-access"
+# # Config Rule for MFA enabled for IAM console access
+# resource "aws_config_config_rule" "mfa_enabled_for_iam_console_access" {
+#   name = "mfa-enabled-for-iam-console-access"
 
-  source {
-    owner             = "AWS"
-    source_identifier = "MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS"
-  }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
-}
+#   source {
+#     owner             = "AWS"
+#     source_identifier = "MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS"
+#   }
+#   depends_on = [aws_config_configuration_recorder.config_recorder]
+# }
