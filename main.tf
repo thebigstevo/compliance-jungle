@@ -65,7 +65,7 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
 # Attach AWS managed policy for Config
 resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
   role       = aws_iam_role.config_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/ConfigRole"
+  policy_arn = "arn:aws:iam::aws:policy/AWS_ConfigRole"
 }
 
 # Additional S3 permissions for Config delivery bucket
@@ -98,10 +98,7 @@ resource "aws_config_configuration_recorder" "config_recorder" {
 
   recording_group {
     all_supported              = true
-    include_global_resource_types = false
-    resource_types = [
-      "AWS::S3::Bucket"
-    ]
+    include_global_resource_types = true
   }
 }
 
