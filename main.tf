@@ -65,7 +65,7 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
 # Attach AWS managed policy for Config
 resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
   role       = aws_iam_role.config_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AWS_ConfigRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
 }
 
 # Additional S3 permissions for Config delivery bucket
@@ -79,13 +79,9 @@ resource "aws_iam_role_policy" "config_s3_policy" {
       {
         Effect   = "Allow",
         Action   = [
-          "s3:PutObject",
-          "s3:GetBucketAcl"
+          "s3:PutObject"
         ],
-        Resource = [
-          aws_s3_bucket.config_bucket.arn,
-          "${aws_s3_bucket.config_bucket.arn}/*"
-        ]
+        Resource = "${aws_s3_bucket.config_bucket.arn}/*"
       }
     ]
   })
