@@ -122,6 +122,9 @@ resource "aws_config_configuration_recorder" "config_recorder" {
   recording_group {
     all_supported              = true
     include_global_resource_types = false
+    resource_types = [
+      "AWS::S3::Bucket"
+    ]
   }
 }
 
@@ -538,16 +541,16 @@ resource "aws_config_config_rule" "iam_password_policy" {
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
-# Config Rule for IAM user no policies check
-resource "aws_config_config_rule" "iam_user_no_policies_check" {
-  name = "iam-user-no-policies-check"
+# # Config Rule for IAM user no policies check
+# resource "aws_config_config_rule" "iam_user_no_policies_check" {
+#   name = "iam-user-no-policies-check"
 
-  source {
-    owner             = "AWS"
-    source_identifier = "IAM_USER_NO_POLICIES_CHECK"
-  }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
-}
+#   source {
+#     owner             = "AWS"
+#     source_identifier = "IAM_USER_NO_POLICIES_CHECK"
+#   }
+#   depends_on = [aws_config_configuration_recorder.config_recorder]
+# }
 
 # Config Rule for IAM root access key check
 resource "aws_config_config_rule" "iam_root_access_key_check" {
