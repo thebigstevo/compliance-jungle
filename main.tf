@@ -11,6 +11,25 @@ resource "aws_s3_bucket_versioning" "config_bucket_versioning" {
   }
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "config_bucket_encryption" {
+  bucket = aws_s3_bucket.config_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "config_bucket_public_access_block" {
+  bucket = aws_s3_bucket.config_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_iam_role" "config_role" {
   name = "AWSConfigRole"
 
@@ -67,26 +86,6 @@ resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
   role       = aws_iam_role.config_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
 }
-
-# Additional S3 permissions for Config delivery bucket
-resource "aws_iam_role_policy" "config_s3_policy" {
-  role = aws_iam_role.config_role.id
-  name = "ConfigS3DeliveryPolicy"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect   = "Allow",
-        Action   = [
-          "s3:PutObject"
-        ],
-        Resource = "${aws_s3_bucket.config_bucket.arn}/*"
-      }
-    ]
-  })
-}
-
 
 resource "aws_config_configuration_recorder" "config_recorder" {
   name     = "config-recorder"
@@ -146,126 +145,6 @@ resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
-
-# NOT USED - No Lambda resources
-# # Config Rule for EC2 no lambda DLQ check
-# resource "aws_config_config_rule" "lambda-dlq-check" {
-#   name = "lambda-dlq-check"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "LAMBDA_DLQ_CHECK"
-#   }
-#   scope {
-#     compliance_resource_types = [ "AWS::Lambda::Function" ]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-
-# NOT USED - No EFS resources
-# # Config Rule for efs_access_point_enforce_root_directory
-# resource "aws_config_config_rule" "efs-access-point-enforce-root-directory" {
-#   name = "efs_access_point_enforce_root_directory"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "EFS_ACCESS_POINT_ENFORCE_ROOT_DIRECTORY"
-#   }
-#   scope {
-#     compliance_resource_types = [ "AWS::EFS::AccessPoint" ]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-
-# NOT USED - No API Gateway resources for OpenEMR
-# # API Gateway Config Rules
-# 
-# # Config Rule for API Gateway logging enabled
-# resource "aws_config_config_rule" "api_gateway_execution_logging_enabled" {
-#   name = "api-gateway-execution-logging-enabled"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "API_GW_EXECUTION_LOGGING_ENABLED"
-#   }
-#   scope {
-#     compliance_resource_types = ["AWS::ApiGateway::Stage"]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-# 
-# # Config Rule for API Gateway SSL certificate check
-# resource "aws_config_config_rule" "api_gateway_ssl_enabled" {
-#   name = "api-gateway-ssl-enabled"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "API_GW_SSL_ENABLED"
-#   }
-#   scope {
-#     compliance_resource_types = ["AWS::ApiGateway::Stage"]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-# 
-# # Config Rule for API Gateway cache encryption
-# resource "aws_config_config_rule" "api_gateway_cache_encrypted" {
-#   name = "api-gateway-cache-encrypted"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "API_GW_CACHE_ENABLED_AND_ENCRYPTED"
-#   }
-#   scope {
-#     compliance_resource_types = ["AWS::ApiGateway::Stage"]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-
-# NOT USED - No ECS resources for OpenEMR
-# # ECS Config Rules
-# 
-# # Config Rule for ECS task definition memory hard limit
-# resource "aws_config_config_rule" "ecs_task_definition_memory_hard_limit" {
-#   name = "ecs-task-definition-memory-hard-limit"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "ECS_TASK_DEFINITION_MEMORY_HARD_LIMIT"
-#   }
-#   scope {
-#     compliance_resource_types = ["AWS::ECS::TaskDefinition"]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-# 
-# # Config Rule for ECS task definition nonroot user
-# resource "aws_config_config_rule" "ecs_task_definition_nonroot_user" {
-#   name = "ecs-task-definition-nonroot-user"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "ECS_TASK_DEFINITION_NONROOT_USER"
-#   }
-#   scope {
-#     compliance_resource_types = ["AWS::ECS::TaskDefinition"]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-# 
-# # Config Rule for ECS task definition log configuration
-# resource "aws_config_config_rule" "ecs_task_definition_log_configuration" {
-#   name = "ecs-task-definition-log-configuration"
-# 
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "ECS_TASK_DEFINITION_LOG_CONFIGURATION"
-#   }
-#   scope {
-#     compliance_resource_types = ["AWS::ECS::TaskDefinition"]
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
 
 # EC2/EMR Infrastructure Rules
 
@@ -511,17 +390,6 @@ resource "aws_config_config_rule" "iam_password_policy" {
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
-# # Config Rule for IAM user no policies check
-# resource "aws_config_config_rule" "iam_user_no_policies_check" {
-#   name = "iam-user-no-policies-check"
-
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "IAM_USER_NO_POLICIES_CHECK"
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
-
 # Config Rule for IAM root access key check
 resource "aws_config_config_rule" "iam_root_access_key_check" {
   name = "iam-root-access-key-check"
@@ -532,14 +400,3 @@ resource "aws_config_config_rule" "iam_root_access_key_check" {
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
-
-# # Config Rule for MFA enabled for IAM console access
-# resource "aws_config_config_rule" "mfa_enabled_for_iam_console_access" {
-#   name = "mfa-enabled-for-iam-console-access"
-
-#   source {
-#     owner             = "AWS"
-#     source_identifier = "MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS"
-#   }
-#   depends_on = [aws_config_configuration_recorder.config_recorder]
-# }
