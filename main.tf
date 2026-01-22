@@ -62,9 +62,16 @@ resource "aws_s3_bucket_policy" "config_bucket_policy" {
 }
 
 
-# IAM Role Policy for AWS Config
-resource "aws_iam_role_policy" "config_policy" {
+# Attach AWS managed policy for Config
+resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
+  role       = aws_iam_role.config_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/ConfigRole"
+}
+
+# Additional S3 permissions for Config delivery bucket
+resource "aws_iam_role_policy" "config_s3_policy" {
   role = aws_iam_role.config_role.id
+  name = "ConfigS3DeliveryPolicy"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -72,41 +79,13 @@ resource "aws_iam_role_policy" "config_policy" {
       {
         Effect   = "Allow",
         Action   = [
-          "s3:Get*",
-          "s3:List*",
-          "ec2:Describe*",
-          "ec2:Get*",
-          "ssm:DescribeInstanceInformation",
-          "ssm:ListAssociations",
-          "ssm:ListInstanceAssociations",
-          "cloudwatch:DescribeAlarms",
-          "logs:DescribeLogGroups",
-          "iam:GetAccountPasswordPolicy",
-          "iam:ListUsers",
-          "iam:GetUser",
-          "iam:GetUserPolicy",
-          "iam:ListUserPolicies",
-          "iam:ListAttachedUserPolicies",
-          "iam:GetAccountSummary",
-          "iam:GetRole",
-          "iam:GetRolePolicy",
-          "iam:ListRoles",
-          "iam:ListRolePolicies",
-          "iam:ListAttachedRolePolicies",
-          "iam:GetPolicy",
-          "iam:GetPolicyVersion",
-          "iam:ListPolicies",
-          "iam:ListGroups",
-          "iam:GetGroup",
-          "iam:GetGroupPolicy",
-          "iam:ListGroupPolicies",
-          "iam:ListAttachedGroupPolicies",
-          "config:Put*",
-          "config:Get*",
-          "config:Describe*",
-          "config:ListDiscoveredResources"
+          "s3:PutObject",
+          "s3:GetBucketAcl"
         ],
-        Resource = "*"
+        Resource = [
+          aws_s3_bucket.config_bucket.arn,
+          "${aws_s3_bucket.config_bucket.arn}/*"
+        ]
       }
     ]
   })
@@ -120,6 +99,9 @@ resource "aws_config_configuration_recorder" "config_recorder" {
   recording_group {
     all_supported              = true
     include_global_resource_types = false
+    resource_types = [
+      "AWS::S3::Bucket"
+    ]
   }
 }
 
