@@ -4,64 +4,64 @@ resource "aws_config_config_rule" "s3_bucket_encryption" {
   name = "s3-bucket-encryption"
 
   source {
-    owner             = "AWS"
+    owner             = local.aws_rule_owner
     source_identifier = "S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED"
   }
 
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
+  depends_on = local.config_rule_depends_on
 }
 
 resource "aws_config_config_rule" "s3_bucket_versioning_enabled" {
   name = "s3-bucket-versioning-enabled"
 
   source {
-    owner             = "AWS"
+    owner             = local.aws_rule_owner
     source_identifier = "S3_BUCKET_VERSIONING_ENABLED"
   }
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
+  depends_on = local.config_rule_depends_on
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
   name = "s3-bucket-public-read-prohibited"
 
   source {
-    owner             = "AWS"
+    owner             = local.aws_rule_owner
     source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
   }
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
+  depends_on = local.config_rule_depends_on
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
   name = "s3-bucket-public-write-prohibited"
 
   source {
-    owner             = "AWS"
+    owner             = local.aws_rule_owner
     source_identifier = "S3_BUCKET_PUBLIC_WRITE_PROHIBITED"
   }
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
+  depends_on = local.config_rule_depends_on
 }
 
 resource "aws_config_config_rule" "s3_bucket_logging_enabled" {
   name = "s3-bucket-logging-enabled"
 
   source {
-    owner             = "AWS"
+    owner             = local.aws_rule_owner
     source_identifier = "S3_BUCKET_LOGGING_ENABLED"
   }
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = [aws_config_configuration_recorder.config_recorder]
+  depends_on = local.config_rule_depends_on
 }

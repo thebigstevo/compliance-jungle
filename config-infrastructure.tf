@@ -3,7 +3,7 @@
 
 # AWS S3 bucket for Config delivery
 resource "aws_s3_bucket" "config_bucket" {
-  bucket = "compliance-config-monitoring-bucket-25"
+  bucket = var.config_bucket_name
 }
 
 resource "aws_s3_bucket_versioning" "config_bucket_versioning" {
@@ -19,7 +19,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "config_bucket_enc
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm = var.s3_encryption_algorithm
     }
   }
 }
@@ -34,7 +34,7 @@ resource "aws_s3_bucket_public_access_block" "config_bucket_public_access_block"
 }
 
 resource "aws_iam_role" "config_role" {
-  name = "AWSConfigRole"
+  name = var.config_role_name
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -89,17 +89,17 @@ resource "aws_iam_role_policy_attachment" "config_policy_attachment" {
 }
 
 resource "aws_config_configuration_recorder" "config_recorder" {
-  name     = "config-recorder"
+  name     = var.config_recorder_name
   role_arn = aws_iam_role.config_role.arn
 
   recording_group {
-    all_supported              = true
-    include_global_resource_types = true
+    all_supported                 = true
+    include_global_resource_types = var.include_global_resource_types
   }
 }
 
 resource "aws_config_delivery_channel" "config_delivery_channel" {
-  name           = "config-delivery-channel"
+  name           = var.config_delivery_channel_name
   s3_bucket_name = aws_s3_bucket.config_bucket.bucket
 
   depends_on = [
@@ -111,6 +111,6 @@ resource "aws_config_delivery_channel" "config_delivery_channel" {
 
 resource "aws_config_configuration_recorder_status" "config_recorder_status" {
   name       = aws_config_configuration_recorder.config_recorder.name
-  is_enabled = true
+  is_enabled = var.enable_config_recorder
   depends_on = [aws_config_delivery_channel.config_delivery_channel]
 }
