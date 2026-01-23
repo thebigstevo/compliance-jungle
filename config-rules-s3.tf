@@ -9,9 +9,8 @@ resource "aws_config_config_rule" "s3_bucket_encryption" {
   }
 
   scope {
-    compliance_resource_types = ["AWS::S3::Bucket"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -24,9 +23,8 @@ resource "aws_config_config_rule" "s3_bucket_versioning_enabled" {
     source_identifier = "S3_BUCKET_VERSIONING_ENABLED"
   }
   scope {
-    compliance_resource_types = ["AWS::S3::Bucket"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -39,9 +37,8 @@ resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
     source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
   }
   scope {
-    compliance_resource_types = ["AWS::S3::Bucket"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -54,9 +51,8 @@ resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
     source_identifier = "S3_BUCKET_PUBLIC_WRITE_PROHIBITED"
   }
   scope {
-    compliance_resource_types = ["AWS::S3::Bucket"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -69,9 +65,8 @@ resource "aws_config_config_rule" "s3_bucket_logging_enabled" {
     source_identifier = "S3_BUCKET_LOGGING_ENABLED"
   }
   scope {
-    compliance_resource_types = ["AWS::S3::Bucket"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }

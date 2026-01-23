@@ -15,9 +15,8 @@ resource "aws_config_config_rule" "cloudwatch_alarm_action_check" {
   })
 
   scope {
-    compliance_resource_types = ["AWS::CloudWatch::Alarm"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -30,9 +29,8 @@ resource "aws_config_config_rule" "cloudwatch_log_group_encrypted" {
     source_identifier = "CLOUDWATCH_LOG_GROUP_ENCRYPTED"
   }
   scope {
-    compliance_resource_types = ["AWS::Logs::LogGroup"]
-    tag_key                   = var.resource_tag_key
-    tag_value                 = var.resource_tag_value
+    tag_key   = var.resource_tag_key
+    tag_value = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
