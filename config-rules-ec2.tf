@@ -11,7 +11,7 @@ resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
   scope {
     compliance_resource_types = ["AWS::EC2::Instance"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "ec2_instance_detailed_monitoring_enabled" {
@@ -24,7 +24,7 @@ resource "aws_config_config_rule" "ec2_instance_detailed_monitoring_enabled" {
   scope {
     compliance_resource_types = ["AWS::EC2::Instance"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "ec2_ebs_encryption_by_default" {
@@ -34,7 +34,7 @@ resource "aws_config_config_rule" "ec2_ebs_encryption_by_default" {
     owner             = local.aws_rule_owner
     source_identifier = "EC2_EBS_ENCRYPTION_BY_DEFAULT"
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "encrypted_volumes" {
@@ -47,7 +47,7 @@ resource "aws_config_config_rule" "encrypted_volumes" {
   scope {
     compliance_resource_types = ["AWS::EC2::Volume"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "ec2_instance_managed_by_ssm" {
@@ -60,5 +60,5 @@ resource "aws_config_config_rule" "ec2_instance_managed_by_ssm" {
   scope {
     compliance_resource_types = ["AWS::EC2::Instance"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }

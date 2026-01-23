@@ -11,7 +11,7 @@ resource "aws_config_config_rule" "s3_bucket_encryption" {
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "s3_bucket_versioning_enabled" {
@@ -24,7 +24,7 @@ resource "aws_config_config_rule" "s3_bucket_versioning_enabled" {
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
@@ -37,7 +37,7 @@ resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
@@ -50,7 +50,7 @@ resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "s3_bucket_logging_enabled" {
@@ -63,5 +63,5 @@ resource "aws_config_config_rule" "s3_bucket_logging_enabled" {
   scope {
     compliance_resource_types = ["AWS::S3::Bucket"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }

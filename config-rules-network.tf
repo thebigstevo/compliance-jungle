@@ -10,7 +10,7 @@ resource "aws_config_config_rule" "ec2_security_group_ssh_restricted" {
   scope {
     compliance_resource_types = ["AWS::EC2::SecurityGroup"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "vpc_flow_logs_enabled" {
@@ -23,7 +23,7 @@ resource "aws_config_config_rule" "vpc_flow_logs_enabled" {
   scope {
     compliance_resource_types = ["AWS::EC2::VPC"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "vpc_default_security_group_closed" {
@@ -36,7 +36,7 @@ resource "aws_config_config_rule" "vpc_default_security_group_closed" {
   scope {
     compliance_resource_types = ["AWS::EC2::SecurityGroup"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "vpc_network_acl_unused_check" {
@@ -49,7 +49,7 @@ resource "aws_config_config_rule" "vpc_network_acl_unused_check" {
   scope {
     compliance_resource_types = ["AWS::EC2::NetworkAcl"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "restricted_common_ports" {
@@ -71,5 +71,5 @@ resource "aws_config_config_rule" "restricted_common_ports" {
   scope {
     compliance_resource_types = ["AWS::EC2::SecurityGroup"]
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }

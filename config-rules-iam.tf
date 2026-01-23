@@ -7,7 +7,7 @@ resource "aws_config_config_rule" "iam_password_policy" {
     owner             = local.aws_rule_owner
     source_identifier = "IAM_PASSWORD_POLICY"
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }
 
 resource "aws_config_config_rule" "iam_root_access_key_check" {
@@ -17,5 +17,5 @@ resource "aws_config_config_rule" "iam_root_access_key_check" {
     owner             = local.aws_rule_owner
     source_identifier = "IAM_ROOT_ACCESS_KEY_CHECK"
   }
-  depends_on = local.config_rule_depends_on
+  depends_on = [aws_config_configuration_recorder.config_recorder]
 }

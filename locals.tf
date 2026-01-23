@@ -7,9 +7,6 @@ locals {
     ManagedBy   = "Terraform"
     Environment = var.environment
   }
-
-  # Config rule common settings
-  config_rule_depends_on = [aws_config_configuration_recorder.config_recorder]
   
   # AWS managed rule owner
   aws_rule_owner = "AWS"
