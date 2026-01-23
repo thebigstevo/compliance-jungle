@@ -9,6 +9,8 @@ resource "aws_config_config_rule" "ec2_security_group_ssh_restricted" {
   }
   scope {
     compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -22,6 +24,8 @@ resource "aws_config_config_rule" "vpc_flow_logs_enabled" {
   }
   scope {
     compliance_resource_types = ["AWS::EC2::VPC"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -35,6 +39,8 @@ resource "aws_config_config_rule" "vpc_default_security_group_closed" {
   }
   scope {
     compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -70,6 +76,8 @@ resource "aws_config_config_rule" "restricted_common_ports" {
 
   scope {
     compliance_resource_types = ["AWS::EC2::SecurityGroup"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }

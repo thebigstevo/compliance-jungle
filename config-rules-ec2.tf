@@ -10,6 +10,8 @@ resource "aws_config_config_rule" "ec2_no_amazon_key_pair" {
 
   scope {
     compliance_resource_types = ["AWS::EC2::Instance"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -23,6 +25,8 @@ resource "aws_config_config_rule" "ec2_instance_detailed_monitoring_enabled" {
   }
   scope {
     compliance_resource_types = ["AWS::EC2::Instance"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -46,6 +50,8 @@ resource "aws_config_config_rule" "encrypted_volumes" {
   }
   scope {
     compliance_resource_types = ["AWS::EC2::Volume"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }
@@ -59,6 +65,8 @@ resource "aws_config_config_rule" "ec2_instance_managed_by_ssm" {
   }
   scope {
     compliance_resource_types = ["AWS::EC2::Instance"]
+    tag_key                   = var.resource_tag_key
+    tag_value                 = var.resource_tag_value
   }
   depends_on = [aws_config_configuration_recorder.config_recorder]
 }

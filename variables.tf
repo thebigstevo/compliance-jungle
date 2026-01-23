@@ -61,3 +61,15 @@ variable "blocked_ports" {
   default     = ["20", "21", "3389", "3306", "5432"]
   description = "List of ports to block in security group rules"
 }
+
+variable "resource_tag_key" {
+  type        = string
+  default     = "Name"
+  description = "Tag key to filter resources for Config evaluation"
+}
+
+variable "resource_tag_value" {
+  type        = string
+  default     = "openemr"
+  description = "Tag value to filter resources for Config evaluation (case-insensitive contains)"
+}
